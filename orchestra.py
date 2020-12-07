@@ -15,10 +15,10 @@ class Orchestra:
         re.DOTALL + re.MULTILINE
     )
     re_voices = re.compile(
-        '^(?P<vzero>.*?)?^\\s*?(?P<vtype>[vm])(?P<vnum>\\d+):{(?P<vbody>.+?)}',
+        '^(?P<vzero>.*?)?^\\s*?(?P<vtype>[vme])(?P<vnum>\\d+):{(?P<vbody>.+?)}',
         re.DOTALL + re.MULTILINE
     )
-    re_is_event_instr = re.compile('[vm]\\d+:{')
+    re_is_event_instr = re.compile('[vme]\\d+:{')
     re_tilda_search = re.compile('^\\s*?~.+?$', re.DOTALL + re.MULTILINE)
     re_tilda_replace = re.compile('~', re.DOTALL + re.MULTILINE)
     re_no_tilda = re.compile('^\\s*?[^~]\\w.+?$', re.DOTALL + re.MULTILINE)

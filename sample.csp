@@ -16,21 +16,21 @@ endop
 instr	11
 	v1:{
 		kp1 init 112
-		kp2 = 1 
+		kp2 = .1 
 		kcnt = 27
-		kstrum = .02
+		kstrum = .2
 		~kp3 = random:k(1, 10)
 		~kp4 = random:k(1500, 1600)
 		kp5 = random:k(0, 1)
 		~kp6 = random:k(0, 1)
 		~kp7= ktimev
 	}
-	v2:{
+	e2:{
 		kp1 init 112
 		kp7 = 0
 		kp2 = .1
 		kcnt = 12
-		kstrum = .013
+		kstrum = .3
 		~kp3 = random:k(.4, 1.7)
 		~kp4 = ktimev*1040+720
 		kp5 = random:k(0, 1)

@@ -1,16 +1,13 @@
-instr_header = '''
-	ktimei_ = timeinsts:k()/p3
-'''
-
 v = '''
 	kindex_v{0}, kstart_v{0}, kstrum_v{0}	init 0
 	kp2_v{0},  kcnt_v{0}, ktempo_v{0} init 1
 	if metro:k(divz(ktempo_v{0}, abs(kp2_v{0}), 0)) == 1 then
 		if kp2_v{0} < 0 kgoto Pause_v{0}
+                ktime_v{0} = timeinsts:k()/p3
 {1}
 		kdx_v{0} = 0
 		while kdx_v{0} < kcnt_v{0} do
-		        ktimev_v{0} =  ktimei_ + kstart_v{0}/p3
+		        ktime_v{0} += kstart_v{0}/p3
 {2}
 		        event "i", {3}, kstart_v{0}, {4}
 			kstart_v{0} += kstrum_v{0}
@@ -21,16 +18,18 @@ v = '''
 		Pause_v{0}:
 	endif
 '''
+
 e = '''
 	kindex_v{0}, kstart_v{0}, kstrum_v{0}	init 0
 	kp2_v{0},  kcnt_v{0}, ktempo_v{0} init 1
 	if metro:k(divz(ktempo_v{0}, abs(kp2_v{0}), 0)) == 1 then
 		if kp2_v{0} < 0 kgoto Pause_v{0}
+                ktime_v{0} = timeinsts:k()/p3
 {1}
 		kdx_v{0} = 0
 		while kdx_v{0} < kcnt_v{0} do
-		        ktimev_v{0} =  ktimei_ + kstart_v{0}/p3
-		        if ktimev_v{0} > 1 then
+		        ktime_v{0} += kstart_v{0}/p3
+		        if ktime_v{0} > 1 then
 		        	goto VPause_v{0}
 		        endif
 {2}

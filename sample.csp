@@ -20,28 +20,27 @@ instr	11
 		kcnt = 27
 		kstrum = .2
 		~kp3 = random:k(1, 10)
-		~kp4 = random:k(1500, 1600)
+		~kp4 = random:k(500, 600)
 		kp5 = random:k(0, 1)
 		~kp6 = random:k(0, 1)
-		~kp7= ktimev
+		~kp7= ktime
 	}
 	e2:{
 		kp1 init 112
 		kp7 = 0
 		kp2 = .1
-		kcnt = 12
-		kstrum = .3
+		kcnt = 6
+		kstrum = .7
 		~kp3 = random:k(.4, 1.7)
-		~kp4 = ktimev*1040+720
+		~kp4 = ktime*1040+720
 		kp5 = random:k(0, 1)
 		~kp6 = random:k(0, 1)
-		~kp7= ktimev
 	}
 endin
 
-gicnt = 0
 instr	112
-	p3 = p3/3
+	p3=p3/8
+	;print p4
 	ae	linseg	.0, p3/2, 1, p3-p3/2, 0.0
 	a2	oscili ae*p5*.01, p4, -1, 0
 		out a2*p6, a2*(1-p6)

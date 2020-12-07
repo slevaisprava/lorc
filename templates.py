@@ -29,9 +29,7 @@ e = '''
 		kdx_v{0} = 0
 		while kdx_v{0} < kcnt_v{0} do
 		        ktime_v{0} += kstart_v{0}/p3
-		        if ktime_v{0} > 1 then
-		        	goto VPause_v{0}
-		        endif
+		        if ktime_v{0} > 1 kgoto VPause_v{0}
 {2}
 		        event "i", {3}, kstart_v{0}, {4}
 			kstart_v{0} += kstrum_v{0}

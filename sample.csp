@@ -1,0 +1,50 @@
+;nice -n-19 csound -m0  -odac -b1024 -B2048 -d  -+rtaudio=alsa --orc /dev/shm/~temp.orc
+
+sr     = 48000
+ksmps  = 64
+nchnls = 2
+0dbfs =  1
+
+opcode	Pquant, k, kkk
+	kin, kstep, kquant xin
+	xout kin + (round(kin/kstep)*kstep-kin)*kquant
+endop
+
+
+
+	schedule 11, 0, 10
+	event_i "e", 0, 13.6
+
+instr	11
+
+	v1:{
+		kp1 init 112
+		kp2 = 1 
+		kcnt = 7 
+		kstrum = .02
+		~kp3 = random:k(1, 10)
+		~kp4 = kline_*1000+500; Pquant(random:k(955, 1700), 100, 1)
+		kp5 = random:k(0, 1)
+		~kp6 = random:k(0, 1)
+		~kk4v1 = kp4
+	}
+	v2:{
+		kp1 init 112
+		kp2 = .8
+		kcnt = 14
+		kstrum = .2
+		~kp3 = random:k(1.4, 7)
+		~kp4 = kline_*1000+500;random:k(1955, 3700)
+		kp5 = random:k(0, 1)
+		~kp6 = random:k(0, 1)
+	}
+endin
+
+instr	112
+	p3 = p3/7
+	print p4
+
+	ae	expsega	.0001, p3/2, 1, p3-p3/2, 0.001
+	a2	oscili ae*p5*.05, p4, -1, 0
+		out a2*p6, a2*(1-p6)
+endin

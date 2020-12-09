@@ -17,7 +17,7 @@ def line(values, times):
     return my_module.line_line(values, times)
 
 t1 = time.time()
-a = line_curve([0, 12,0]*4, [10], [-5,5]*10)
+a = line_curve([0, 12,4]*4, [10], [-5,0, 5]*10)
 #a = line([0, 12, 0,0]*2, [10,20,20])
 
 plt.plot(a)

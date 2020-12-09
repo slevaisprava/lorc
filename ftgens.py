@@ -18,15 +18,8 @@ def line_curve(values, times, curves):
     i = 0
     for time in times:
         arr = np.linspace(values[i], values[i+1], time)
-        # ----Curve----
-        mn = np.min(arr)
-        mx = np.max(arr)
-        if mn != mx:
-            grow = np.exp(curves[i])
-            a = (mx - mn)/(1.0 - grow)
-            b = mn + a;
-            arr = b - (a * np.power(grow, (arr - mn)/(mx - mn)))
-        # --------------
+        if curves[i] != 0:
+            arr = make_curves(arr, curves[i])
         table.append(arr)
         i += 1
     return _flate(table)
@@ -54,6 +47,18 @@ def line_line(values, times):
             k += 1
     res[res_size-1] = values[-1]
     return res
+
+
+@njit
+def make_curves(arr, curve):
+    mn = np.min(arr)
+    mx = np.max(arr)
+    if mn != mx:
+        grow = np.exp(curve)
+        a = (mx - mn)/(1.0 - grow)
+        b = mn + a;
+        arr = b - (a * np.power(grow, (arr - mn)/(mx - mn)))
+    return arr
 
 
 @njit

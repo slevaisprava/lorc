@@ -1,5 +1,4 @@
 import re
-import time
 
 import templates
 
@@ -26,30 +25,27 @@ class Orchestra:
     re_kp_field = re.compile('\\b(kp\\d+_v\\d+\\b)')
 
     def __init__(self, src):
-        st1 = time.time()
-        self._src = self._remove_comments(src)
-        self._orchestra = self._split()
-        st2 = time.time()
-        self._time = st2 - st1
-
-    @property
-    def time(self):
-        return self._time
+        src, tabs, udo = self._parse_whole_orchestra(src)
+        self._orchestra = self._split_instrs(src, tabs, udo)
 
     @property
     def orchestra(self):
         return self._orchestra
 
-    def _remove_comments(self, src):
+    def _parse_whole_orchestra(self, src):
+        src = self._parse_comments(src)
+        return src, ';;;tables\n', ';;;udos'
+
+    def _parse_comments(self, src):
         for i in self.re_comments:
             src = i.sub('', src)
         return src
 
-    def _split(self):
-        orc = list()
-        for instr in self.re_instrs.finditer(self._src):
+    def _split_instrs(self, src, tabs, udo):
+        orc = [tabs, udo]
+        for instr in self.re_instrs.finditer(src):
             ibody = instr.group('ibody')
-            orc.append(instr.group('izero') or '\n')  # tabs
+            orc.append(instr.group('izero') or '\n')
             orc.append('instr\t' + instr.group('inum'))
 
             # Normal instruments
@@ -58,9 +54,10 @@ class Orchestra:
                 orc.append('endin\n')
                 continue
 
+            # Event instruments
             for voice in self.re_voices.finditer(ibody):
                 orc.append(voice.group('vzero') or '')
-                code = self._change_kvars(
+                code = self._parse_vars(
                     voice.group('vbody'),
                     voice.group('vnum'),
                     voice.group('vtype')
@@ -69,7 +66,7 @@ class Orchestra:
             orc.append('endin\n')
         return orc
 
-    def _change_kvars(self, voice, vnum, vtype):
+    def _parse_vars(self, voice, vnum, vtype):
         code = self.re_kvar.sub(f'\\t\\g<1>_v{vnum}', voice)
         pfields = list(sorted(set(self.re_kp_field.findall(code))))
 

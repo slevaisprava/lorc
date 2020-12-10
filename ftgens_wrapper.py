@@ -11,15 +11,20 @@ def line_curve(values, times, curves):
     curves = np.array(curves, dtype=np.float)
     return my_module.line_curve(values, times, curves)
 
-def line(values, times):
+def line(values, times, curves):
     values = np.array(values, dtype=np.float)
     times = np.array(times, dtype=np.int32)
-    return my_module.line_line(values, times)
+    curves = np.array(curves, dtype=np.float)
+    return my_module.line_line(values, times, curves)
+
+#t1 = time.time()
+#a = line_curve([0, 12,0], [1000000], [5])
+#print(time.time()-t1)
 
 t1 = time.time()
-a = line_curve([0, 12,4]*4, [10], [-5,0, 5]*10)
-#a = line([0, 12, 0,0]*2, [10,20,20])
+b = line([0, 12, 0], [1000000], [5])
+print(time.time()-t1, np.max(b))
 
-plt.plot(a)
+plt.plot(b)
 plt.show()
-
+#

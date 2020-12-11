@@ -25,8 +25,9 @@ class Orchestra:
     re_kvar = re.compile('([^:_]\\bk[a-zA-Z0-9]*\\b)')
     re_kp_field = re.compile('\\b(kp\\d+_v\\d+\\b)')
 
-    def __init__(self, src):
+    def __init__(self, src, orc_num):
         self.src = src
+        self.orc_num = orc_num
         tabs, udo = self._parse_whole_orchestra()
         self._orchestra = self._split_instrs(tabs, udo)
 
@@ -36,7 +37,7 @@ class Orchestra:
 
     def _parse_whole_orchestra(self):
         self._parse_comments()
-        tables.ParseTables(self.src)
+        tables.ParseTables(self.src, self.orc_num)
         return ';;;tables\n', ';;;udos'
 
     def _parse_comments(self):
@@ -92,6 +93,6 @@ class Orchestra:
 if __name__ == "__main__":
     with open('sample.csp', 'r') as f:
         source = f.read()
-    orch = Orchestra(source)
+    orch = Orchestra(source, 1)
     with open('sample.orc', 'w') as f:
         f.writelines(orch.orchestra)

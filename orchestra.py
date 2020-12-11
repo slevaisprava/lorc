@@ -28,7 +28,8 @@ class Orchestra:
     def __init__(self, src, orc_num):
         self.src = src
         self.orc_num = orc_num
-        tabs, udo = self._parse_whole_orchestra()
+        src, tabs, udo = self._parse_whole_orchestra()
+        self.src = src
         self._orchestra = self._split_instrs(tabs, udo)
 
     @property
@@ -37,8 +38,9 @@ class Orchestra:
 
     def _parse_whole_orchestra(self):
         self._parse_comments()
-        tables.ParseTables(self.src, self.orc_num)
-        return ';;;tables\n', ';;;udos'
+        parse_tabs = tables.ParseTables(self.src, self.orc_num)
+        src, tabs = parse_tabs.parse_table_data()
+        return src, tabs, '\n;udo'
 
     def _parse_comments(self):
         for i in self.re_comments:

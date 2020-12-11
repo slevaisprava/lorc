@@ -27,6 +27,7 @@ instr	11
 		~kp4 = random:k(2500, 11600)
 		kp5 = random:k(0, .2)
 		~kp6 = random:k(0, 1)
+		kp7 = table([1,2], [1,6], [5], 2, 7)
 	}
 	e2:{
 		kcnt init 113
@@ -37,6 +38,7 @@ instr	11
 		~kp4= Pquant(table:k(ktime, gitab, 1), 1000, .9)/5
 		kp5 = random:k(0, 1)
 		~kp6 = random:k(0, 1)
+		kp7 = table([123,23], [11,16], [5], 12, 78)
 	}
 endin
 

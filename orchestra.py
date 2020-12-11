@@ -1,6 +1,7 @@
 import re
 
 import templates
+import tables
 
 
 class Orchestra:
@@ -34,6 +35,7 @@ class Orchestra:
 
     def _parse_whole_orchestra(self, src):
         src = self._parse_comments(src)
+        tables.ParseTables(src)
         return src, ';;;tables\n', ';;;udos'
 
     def _parse_comments(self, src):

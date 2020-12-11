@@ -26,26 +26,26 @@ class Orchestra:
     re_kp_field = re.compile('\\b(kp\\d+_v\\d+\\b)')
 
     def __init__(self, src):
-        src, tabs, udo = self._parse_whole_orchestra(src)
-        self._orchestra = self._split_instrs(src, tabs, udo)
+        self.src = src
+        tabs, udo = self._parse_whole_orchestra()
+        self._orchestra = self._split_instrs(tabs, udo)
 
     @property
     def orchestra(self):
         return self._orchestra
 
-    def _parse_whole_orchestra(self, src):
-        src = self._parse_comments(src)
-        tables.ParseTables(src)
-        return src, ';;;tables\n', ';;;udos'
+    def _parse_whole_orchestra(self):
+        self._parse_comments()
+        tables.ParseTables(self.src)
+        return ';;;tables\n', ';;;udos'
 
-    def _parse_comments(self, src):
+    def _parse_comments(self):
         for i in self.re_comments:
-            src = i.sub('', src)
-        return src
+            self.src = i.sub('', self.src)
 
-    def _split_instrs(self, src, tabs, udo):
+    def _split_instrs(self, tabs, udo):
         orc = [tabs, udo]
-        for instr in self.re_instrs.finditer(src):
+        for instr in self.re_instrs.finditer(self.src):
             ibody = instr.group('ibody')
             orc.append(instr.group('izero') or '\n')
             orc.append('instr\t' + instr.group('inum'))

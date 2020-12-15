@@ -11,10 +11,10 @@ opcode	Pquant, k, kkk
 	xout kin + (round(kin/kstep)*kstep-kin)*kquant
 endop
 
-	gitab = ftgen(0,0, 8192, -5, 456, 8192/2, 11869, 8192/2, 456)
+	gitab = ftgen(0,0, 8192, -7, 1456, 8192/2, 11869, 8192/2, 1456)
 
 	;event_i "i", 11, 0.1, 11, 2
-	event_i "i", 11, 0, 10.3, 23
+	event_i "i", 11, 0, 10.3, 52
 	event_i "e", 0, 11.5
 
 instr	11
@@ -27,18 +27,18 @@ instr	11
 		~kp4 = random:k(2500, 11600)
 		kp5 = random:k(0, .2)
 		~kp6 = random:k(0, 1)
-		kp7 = table([1,2], [1,6], [5], 2, 7)
+		;kp7 = table([1,2], [1,6], [5], 2, 7)
 	}
 	e2:{
-		kcnt init 113
-		kstrum init 0.1
 		kp1 init 112
-		kp2 = random:k(.01, .2)/6
+		kcnt init 113
+		kstrum init 0.004
+		kp2 = random:k(.1, .2)/6
 		~kp3 = random:k(.1, 1.7)/p4
-		~kp4= Pquant(table:k(ktime, gitab, 1), 1000, .9)/5
+		~kp4= Pquant(table:k(ktime, gitab, 1), 1000, .8)/6
 		kp5 = random:k(0, 1)
 		~kp6 = random:k(0, 1)
-		kp7 = table([123,23], [11,16], [5], 12, 78)
+		;#kp7 = table([123,23], [11,16], [5], 12, 78)
 	}
 endin
 

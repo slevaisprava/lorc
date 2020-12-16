@@ -50,7 +50,7 @@ class Orchestra:
         for instr in self.re_instrs.finditer(self._src):
             ibody = instr.group('ibody')
             orc.append(instr.group('izero') or '\n')  # tabs
-            orc.append('instr\t' + instr.group('inum'))
+            orc.append('instr\t' + instr.group('inum') + templates.instr_header)
 
             # Normal instruments
             if not self.re_is_event_instr.search(ibody):

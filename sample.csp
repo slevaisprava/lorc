@@ -10,41 +10,39 @@ opcode	Pquant, k, kkk
 	xout kin + (round(kin/kstep)*kstep-kin)*kquant
 endop
 
-
-
-	schedule 11, 0, 10
-	event_i "e", 0, 13.6
+	event_i "i", 11, 0, 10
+	event_i "e", 0, 11
 
 instr	11
-
 	v1:{
 		kp1 init 112
 		kp2 = 1 
-		kcnt = 7 
+		kcnt = 27
 		kstrum = .02
 		~kp3 = random:k(1, 10)
-		~kp4 = kline_*1000+500; Pquant(random:k(955, 1700), 100, 1)
+		~kp4 = random:k(1500, 1600)
 		kp5 = random:k(0, 1)
 		~kp6 = random:k(0, 1)
-		~kk4v1 = kp4
+		~kp7= ktimev
 	}
 	v2:{
 		kp1 init 112
-		kp2 = .8
-		kcnt = 14
-		kstrum = .2
-		~kp3 = random:k(1.4, 7)
-		~kp4 = kline_*1000+500;random:k(1955, 3700)
+		kp7 = 0
+		kp2 = .1
+		kcnt = 12
+		kstrum = .013
+		~kp3 = random:k(.4, 1.7)
+		~kp4 = ktimev*1040+720
 		kp5 = random:k(0, 1)
 		~kp6 = random:k(0, 1)
+		~kp7= ktimev
 	}
 endin
 
+gicnt = 0
 instr	112
-	p3 = p3/7
-	print p4
-
-	ae	expsega	.0001, p3/2, 1, p3-p3/2, 0.001
-	a2	oscili ae*p5*.05, p4, -1, 0
+	p3 = p3/3
+	ae	linseg	.0, p3/2, 1, p3-p3/2, 0.0
+	a2	oscili ae*p5*.01, p4, -1, 0
 		out a2*p6, a2*(1-p6)
 endin

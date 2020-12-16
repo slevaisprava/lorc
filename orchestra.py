@@ -93,8 +93,8 @@ class Orchestra:
 
 
 if __name__ == "__main__":
-    with open('sample.csp', 'r') as f:
+    with open('csound/sample.csp', 'r') as f:
         source = f.read()
     orch = Orchestra(source, 1)
-    with open('sample.orc', 'w') as f:
+    with open('csound/sample.orc', 'w') as f:
         f.writelines(orch.orchestra)

@@ -1,0 +1,33 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[taggrouping]
+	groups = 
+	singles = 
+
+[tig "bind"] 
+	main = a !python .git/checkout.py  %(commit)
+[tig "color"] 
+	 graph-commit = 106 default bold
+	 palette-0 = 64 default  
+	 palette-1 = 64 default  
+	 palette-2 = 64 default  
+	 palette-3 = 64 default  
+	 palette-4 = 64 default  
+	 palette-5 = 64 default  
+	 palette-6 = 64 default  
+	 palette-7 = 64 default  
+	 palette-8 = 64 default  
+	 palette-9 = 64 default  
+	 palette-10 =64 default  
+	 palette-11 =64 default  
+	 palette-12 =64 default  
+	 palette-13 =64 default  
+[tig]
+	start-on-head = 1
+	main-view-commit-title-refs = yes
+	main-view-date-display = no
+	main-view-author-display = no
+	refs-view-author-display = no

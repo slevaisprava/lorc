@@ -4,7 +4,7 @@ import hashlib
 
 class ParseTables:
     lst = '(\\[.*?\\]\\s*(?:\\*\\s*\\d*)?)'
-    re_table_data = re.compile(f'([~]?)\\s*{lst}\\s*,\\s*{lst}\\s*,\\s*{lst}')
+    re_table_data = re.compile(f'([+~]*?)\\s*{lst}\\s*,\\s*{lst}\\s*,\\s*{lst}')
     re_white_space = re.compile('\\s+')
 
     ftgen23 = '{} ftgen 0, 0, 0, -23, {}'

@@ -7,6 +7,8 @@ class ParseTables:
     re_table_data = re.compile(f'([~]?)\\s*{lst}\\s*,\\s*{lst}\\s*,\\s*{lst}')
     re_white_space = re.compile('\\s+')
 
+    ftgen23 = '{} ftgen 0, 0, 0, -23, {}'
+
     def __init__(self, src, orc_num):
         self.orc_num = orc_num
         self.src = src
@@ -31,13 +33,12 @@ class ParseTables:
     def _make_table_record(self):
         hash_dig = self._make_hash_dig()
         self.tab_def.append(self.tab_name)
-
         if hash_dig in self.table_records:
             existing_name = self.table_records[hash_dig][4]
             self.ftgens.append(self.tab_name + ' = ' + existing_name)
         else:
             self.table_records[hash_dig] = self.tab_def
-            self.ftgens.append(self.tab_name + ' ftgen ' + hash_dig)
+            self.ftgens.append(self.ftgen23.format(self.tab_name, hash_dig))
 
     def _make_hash_dig(self):
         hash_object = hashlib.sha1(str(self.tab_def).encode())
@@ -52,9 +53,9 @@ class MakeTables:
 
 if __name__ == "__main__":
     SRC = '''
-        table(~[123,23], [11,17], [5], 12, 78)
+        table([123,23], [11,17], [5], 12, 78)
         table([123,23], [11, 16], [5], 12, 78)
-        table([123,23], [ 11 ,16], [ 5 ], 12, 78)
+        table(~+[123,23], [ 11 ,16], [ 5 ], 12, 78)
         table([123,23], [ 11 ,16], [ 5 ], 12, 78)
     '''
     t = ParseTables(SRC, 1)

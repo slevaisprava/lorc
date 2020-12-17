@@ -3,7 +3,7 @@ import hashlib
 
 
 class ParseEnvelope:
-    lst = '(\\[.*?\\]\\s*(?:\\*\\s*\\d*)?)'
+    lst = '(\\[.*?\\]\\s*(?:\\*\\s*\\d+)?)'
     re_table_data = re.compile(f'([+~]*?)\\s*{lst}\\s*,\\s*{lst}\\s*,\\s*{lst}')
     re_white_space = re.compile('\\s+')
 
@@ -52,7 +52,7 @@ class MakeEnvelopes:
 
 if __name__ == "__main__":
     SRC = '''
-        table([123,23], [11,17], [5], 12, 78)
+        table(+[123,23]*3, [11,17], [5], 12, 78)
         table([123,23], [11, 16], [5], 12, 78)
         table(~+[123,23], [ 11 ,16], [ 5 ], 12, 78)
         table([123,23], [ 11 ,16], [ 5 ], 12, 78)

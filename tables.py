@@ -9,32 +9,32 @@ class ParseTables:
     def __init__(self, src, orc_num):
         self.orc_num = orc_num
         self.src = src
+        self.tab_def = None
+        self.tab_name = None
 
         self.tab_num = 0
         self.table_records = set()
         self.ftgens = []
 
-    def parse_table_data(self):
-        self.src = self.re_table_data.sub(self._replace_table_data, self.src)
+    def replace_table_definitions(self):
+        self.src = self.re_table_data.sub(self._table_proc, self.src)
         return self.src, '\n'.join(self.ftgens)
 
-    def _replace_table_data(self, obj: re.Match):
+    def _table_proc(self, obj: re.Match):
         self.tab_num += 1
-        data = obj.groups()
-        tab_name = f'gi_tab_{self.orc_num}_{self.tab_num}'
-        self._make_table_record(data, tab_name)
-        return tab_name
+        self.tab_def = obj.groups()
+        self.tab_name = f'gi_tab_{self.orc_num}_{self.tab_num}'
+        self._make_table_record()
 
-    def _make_table_record(self, data, tab_name):
-        hash_sum = self._make_hash_sum(str(data))
-        data = list(data)
-        data.append(hash_sum)
-        self.table_records.add(tuple(data))
-        self.ftgens.append(tab_name + ' ftgen ' + hash_sum)
+    def _make_table_record(self):
+        hash_dig = self.make_hash_dig()
+        self.tab_def = list(self.tab_def)
+        self.tab_def.append(hash_dig)
+        self.table_records.add(tuple(self.tab_def))
+        self.ftgens.append(self.tab_name + ' ftgen ' + hash_dig)
 
-    @staticmethod
-    def _make_hash_sum(data):
-        hash_object = hashlib.sha1(data.encode())
+    def make_hash_dig(self):
+        hash_object = hashlib.sha1(str(self.tab_def).encode())
         hex_dig = hash_object.hexdigest()
         return hex_dig[:20]
 
@@ -50,6 +50,6 @@ if __name__ == "__main__":
         table([123,23], [11,16], [5], 12, 78)
     '''
     t = ParseTables(SRC, 1)
-    s, f = t.parse_table_data()
+    s, f = t.replace_table_definitions()
     print(t.table_records)
     print(s, f)

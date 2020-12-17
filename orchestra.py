@@ -39,7 +39,7 @@ class Orchestra:
     def _parse_whole_orchestra(self):
         self._parse_comments()
         parse_tabs = tables.ParseTables(self.src, self.orc_num)
-        src, tabs = parse_tabs.parse_table_data()
+        src, tabs = parse_tabs.replace_table_definitions()
         return src, tabs, '\n;udo'
 
     def _parse_comments(self):

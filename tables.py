@@ -7,7 +7,6 @@ class ParseTables:
     re_table_data = re.compile(f'([+~]*?)\\s*{lst}\\s*,\\s*{lst}\\s*,\\s*{lst}')
     re_white_space = re.compile('\\s+')
 
-    ftgen23 = '{} ftgen 0, 0, 0, -23, {}'
 
     def __init__(self, src, orc_num):
         self.orc_num = orc_num
@@ -38,7 +37,7 @@ class ParseTables:
             self.ftgens.append(self.tab_name + ' = ' + existing_name)
         else:
             self.table_records[hash_dig] = self.tab_def
-            self.ftgens.append(self.ftgen23.format(self.tab_name, hash_dig))
+            self.ftgens.append(f'{self.tab_name} ftgen 0, 0, 0, -23, {hash_dig}')
 
     def _make_hash_dig(self):
         hash_object = hashlib.sha1(str(self.tab_def).encode())

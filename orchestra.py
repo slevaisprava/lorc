@@ -1,7 +1,7 @@
 import re
 
 import templates
-import tables
+import envelopes
 
 
 class Orchestra:
@@ -31,11 +31,11 @@ class Orchestra:
 
         self._parse_comments()
 
-        tables_obj = tables.ParseTables(self.src, self.orc_num)
-        tables_obj.replace_table_definitions()
-        tables.MakeTables(tables_obj.table_records)
+        env_obj = envelopes.ParseEnvelope(self.src, self.orc_num)
+        env_obj.replace_env_readers()
+        envelopes.MakeEnvelopes(env_obj.table_records)
 
-        self._orchestra = self._split_instrs(tables_obj.ftgens, ';udo')
+        self._orchestra = self._split_instrs(env_obj.ftgens, ';udo')
 
     @property
     def orchestra(self):
@@ -45,8 +45,8 @@ class Orchestra:
         for i in self.re_comments:
             self.src = i.sub('', self.src)
 
-    def _split_instrs(self, tabs, udo):
-        orc = [tabs, udo]
+    def _split_instrs(self, envs, udo):
+        orc = [envs, udo]
         for instr in self.re_instrs.finditer(self.src):
             ibody = instr.group('ibody')
             orc.append(instr.group('izero') or '\n')

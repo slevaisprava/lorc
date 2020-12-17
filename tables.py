@@ -21,7 +21,7 @@ class ParseTables:
 
     def replace_table_definitions(self):
         self.src = self.re_table_data.sub(self._table_proc, self.src)
-        return self.src, '\n'.join(self.ftgens)
+        self.ftgens = '\n'.join(self.ftgens)
 
     def _table_proc(self, obj: re.Match):
         self.tab_num += 1
@@ -59,6 +59,7 @@ if __name__ == "__main__":
         table([123,23], [ 11 ,16], [ 5 ], 12, 78)
     '''
     t = ParseTables(SRC, 1)
-    s, f = t.replace_table_definitions()
+    t.replace_table_definitions()
     print(t.table_records)
-    print(s, f)
+    print(t.src)
+    print(t.ftgens)

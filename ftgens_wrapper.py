@@ -1,5 +1,5 @@
 import time
-import gc
+#import gc
 import numpy as np
 import matplotlib.pyplot as plt
 import my_module
@@ -22,10 +22,10 @@ def cycle_env1(values, times, curves):
 #print(time.time()-t1)
 
 t1 = time.time()
-b = cycle_env1([5, 12, 0]*5, [1000], [5,5]*6)
+b = cycle_env1([0,  -10, 0]*2, [100], [10])
 #print(time.time()-t1, np.max(b))
-
+np.savetxt('xxx.wav',b,fmt='%g')
 plt.plot(b)
 plt.show()
-gc.collect()
+#gc.collect()
 #

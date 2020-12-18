@@ -1,12 +1,15 @@
 import re
 import hashlib
 
+import numpy as np
+
+import my_module
+
 
 class ParseEnvelope:
     lst = '(\\[.*?\\]\\s*(?:\\*\\s*\\d+)?)'
     re_table_data = re.compile(f'([+~]*?)\\s*{lst}\\s*,\\s*{lst}\\s*,\\s*{lst}')
     re_white_space = re.compile('\\s+')
-
 
     def __init__(self, src, orc_num):
         self.orc_num = orc_num
@@ -25,6 +28,8 @@ class ParseEnvelope:
     def _env_proc(self, obj: re.Match):
         self.tab_num += 1
         self.env_def = [self.re_white_space.sub('', s) for s in obj.groups()]
+        self.env_def[0] = ''.join(sorted(self.env_def[0]))
+
         self.env_name = f'gi_env_{self.orc_num}_{self.tab_num}'
         self._make_table_record()
         return self.env_name
@@ -46,19 +51,34 @@ class ParseEnvelope:
 
 
 class MakeEnvelopes:
-    def __init__(self, data):
-        pass
+    def __init__(self, table_records):
+        self.table_records = table_records
+        self.make_env_functions_args()
+
+    def make_env_functions_args(self):
+        records = self.table_records
+        print(records)
+        for key in records:
+            env_arg = [eval(val) for val in records[key][1:4]]
+            env_arg[0] = np.array(env_arg[0], dtype=np.float)
+            env_arg[1] = np.array(env_arg[1], dtype=np.int32)
+            env_arg[2] = np.array(env_arg[2], dtype=np.float)
+
+            if '+' in records[key][0]:
+                env_arg.append(1)
+            else:
+                env_arg.append(0)
+            env_arg[3] = np.int32(env_arg[3])
+            #a = my_module.env(*env_arg)
 
 
 if __name__ == "__main__":
     SRC = '''
-        table(+[123,23]*3, [11,17], [5], 12, 78)
-        table([123,23], [11, 16], [5], 12, 78)
-        table(~+[123,23], [ 11 ,16], [ 5 ], 12, 78)
-        table([123,23], [ 11 ,16], [ 5 ], 12, 78)
+        table([123,23], [11,17], [5], 12, 78)
+        table(~[123,23], [11,17], [-5], 12, 78)
+        table(~+[123,23], [11,17], [-5], 12, 78)
+        table(~[123,23], [11,17], [-5], 12, 78)
     '''
     t = ParseEnvelope(SRC, 1)
     t.replace_env_readers()
-    print(t.table_records)
-    print(t.src)
-    print(t.ftgens)
+    m = MakeEnvelopes(t.table_records)

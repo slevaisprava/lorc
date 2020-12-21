@@ -42,7 +42,9 @@ class ParseEnvelope:
             self.ftgens.append(self.env_name + ' = ' + existing_name)
         else:
             self.table_records[hash_dig] = self.env_def
-            self.ftgens.append(f'{self.env_name} ftgen 0, 0, 0, -23, {hash_dig}')
+            self.ftgens.append(
+                f'{self.env_name} ftgen 0, 0, 0, -23, {hash_dig}'
+            )
 
     def _make_hash_dig(self):
         hash_object = hashlib.sha1(str(self.env_def).encode())

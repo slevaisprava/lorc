@@ -58,21 +58,21 @@ class MakeEnvelopes:
         self.make_env_functions_args()
 
     def make_env_functions_args(self):
-        records = self.table_records
-        print(records)
-        for key in records:
-            env_arg = [eval(val) for val in records[key][1:4]]
+        for key in self.table_records:
+            env_arg = [eval(val) for val in self.table_records[key][1:4]]
             env_arg[0] = np.array(env_arg[0], dtype=np.float)
             env_arg[1] = np.array(env_arg[1], dtype=np.int32)
             env_arg[2] = np.array(env_arg[2], dtype=np.float)
 
-            if '+' in records[key][0]:
+            if '+' in self.table_records[key][0]:
                 env_arg.append(1)
             else:
                 env_arg.append(0)
-            env_arg[3] = np.int32(env_arg[3])
-            #a = my_module.env(*env_arg)
-
+            if '~' in self.table_records[key][0]:
+                res = my_module.cycle_env(*env_arg)
+            else:
+                res = my_module.env(*env_arg)
+            print(res)
 
 if __name__ == "__main__":
     SRC = '''

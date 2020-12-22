@@ -7,8 +7,8 @@ from numba.typed import List
 cc = CC('my_module')
 
 
-@cc.export('env', 'f8[:](f8[:], i4[:], f8[:])')
-def env(values, times, curves):
+@cc.export('env', 'f8[:](f8[:], i4[:], f8[:], i4)')
+def env(values, times, curves, cumsum):
     times = _justify_arrays(values, times)
     curves = _justify_arrays(values, curves)
 
@@ -33,6 +33,21 @@ def env(values, times, curves):
     return res
 
 
+@cc.export('cycle_env', 'f8[:](f8[:], i4[:], f8[:], i4)')
+def cycle_env(values, times, curves, cumsum):
+    times = _justify_arrays(values, times)
+    curves = _justify_arrays(values, curves)
+    table = List()
+    i = 0
+    for time in times:
+        arr = np.linspace(values[i], values[i+1], time)
+        if curves[i] != 0:
+            arr = make_curves(arr, curves[i])
+        table.append(arr)
+        i += 1
+    return _flate(table)
+
+
 @njit
 def make_curves2(val, mn, mx, curve):
     if mn != mx:
@@ -53,21 +68,6 @@ def _justify_arrays(first, second):
     while first.size - second.size != 1:
         second = np.append(second, second[-1])
     return second
-
-
-@cc.export('cycle_env', 'f8[:](f8[:], i4[:], f8[:])')
-def cycle_env(values, times, curves):
-    times = _justify_arrays(values, times)
-    curves = _justify_arrays(values, curves)
-    table = List()
-    i = 0
-    for time in times:
-        arr = np.linspace(values[i], values[i+1], time)
-        if curves[i] != 0:
-            arr = make_curves(arr, curves[i])
-        table.append(arr)
-        i += 1
-    return _flate(table)
 
 
 @njit

@@ -84,3 +84,4 @@ if __name__ == "__main__":
     t = ParseEnvelope(SRC, 1)
     t.replace_env_readers()
     m = MakeEnvelopes(t.table_records)
+    print(t.src)

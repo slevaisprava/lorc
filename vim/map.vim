@@ -11,11 +11,13 @@ endfunction
 
 function! Start_csound_term()
 	w!
-	rightbelow call term_start("./vim/csound.sh", {"vertical":0, "term_name":"csound_terminal", "exit_cb": "TermHandler"})
-	map <silent><buffer><C-s> :call Close_csound_term()<cr> 
-	map <silent><buffer><Esc> :call Close_csound_term()<cr> 
+	rightbelow call term_start("./vim/csound.sh", {"vertical":0, "term_name":"csound_terminal"})
 	tnoremap <silent><buffer><Esc> <C-W>:bw!<cr>
+	noremap <silent><buffer><Esc> :bw!<cr> 
+	tnoremap <silent><buffer>j <C-W>:bw!<cr>
+	noremap <silent><buffer>j :bw!<cr> 
 endfunction
+
 
 map <buffer><silent><M-s> :call Start_csound_term()<cr>
 imap <silent><buffer><M-s> <Esc>:call Start_csound_term()<cr>

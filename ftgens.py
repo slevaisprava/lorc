@@ -80,9 +80,9 @@ def make_curves(arr, curve):
         b = mn + a;
         arr = b - (a * np.power(grow, (arr - mn)/(mx - mn)))
     return arr
+
+
 @njit
-
-
 def _flate(table):
     res = np.empty(_calc_res_size(table))
     i = 0

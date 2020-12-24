@@ -8,7 +8,9 @@ import my_module
 
 class ParseEnvelope:
     lst = '(\\[.*?\\]\\s*(?:\\*\\s*\\d+)?)'
-    re_table_data = re.compile(f'([+~]*?)\\s*{lst}\\s*,\\s*{lst}\\s*,\\s*{lst}')
+    re_table_data = re.compile(
+        f'([+~]*?)\\s*{lst}\\s*,\\s*{lst}\\s*,\\s*{lst}'
+    )
     re_white_space = re.compile('\\s+')
 
     def __init__(self, src, orc_num):
@@ -43,7 +45,7 @@ class ParseEnvelope:
         else:
             self.table_records[hash_dig] = self.env_def
             self.ftgens.append(
-                f'{self.env_name} ftgen 0, 0, 0, -23, {hash_dig}'
+                f'{self.env_name} ftgen 0, 0, 0, -23, "csound/{hash_dig}"'
             )
 
     def _make_hash_dig(self):
@@ -72,7 +74,7 @@ class MakeEnvelopes:
                 res = my_module.cycle_env(*env_arg)
             else:
                 res = my_module.env(*env_arg)
-            print(res)
+            np.savetxt('csound/'+key, res, fmt='%g')
 
 if __name__ == "__main__":
     SRC = '''
@@ -84,4 +86,3 @@ if __name__ == "__main__":
     t = ParseEnvelope(SRC, 1)
     t.replace_env_readers()
     m = MakeEnvelopes(t.table_records)
-    print(t.src)

@@ -5,6 +5,7 @@ import numpy as np
 
 import my_module
 
+TAB_DIR = '/dev/shm'
 
 class ParseEnvelope:
     lst = '(\\[.*?\\]\\s*(?:\\*\\s*\\d+)?)'
@@ -45,7 +46,7 @@ class ParseEnvelope:
         else:
             self.table_records[hash_dig] = self.env_def
             self.ftgens.append(
-                f'{self.env_name} ftgen 0, 0, 0, -23, "csound/{hash_dig}"'
+                f'{self.env_name} ftgen 0, 0, 0, -23, "{TAB_DIR}/{hash_dig}"'
             )
 
     def _make_hash_dig(self):
@@ -74,7 +75,7 @@ class MakeEnvelopes:
                 res = my_module.cycle_env(*env_arg)
             else:
                 res = my_module.env(*env_arg)
-            np.savetxt('csound/'+key, res, fmt='%g')
+            np.savetxt(f'{TAB_DIR}/{key}', res, fmt='%g')
 
 if __name__ == "__main__":
     SRC = '''

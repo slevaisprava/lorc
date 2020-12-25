@@ -8,7 +8,7 @@ CAPACITY = 20
 class LRUFiles:
     def __init__(self, path):
         self.path = self.__class__.make_path(path)
-        self.cache = self.__class__.make_cache(self.path)
+        self.cache = self.make_cache()
 
     @staticmethod
     def make_path(path):
@@ -17,9 +17,8 @@ class LRUFiles:
             os.makedirs(path)
         return path
 
-    @staticmethod
-    def make_cache(path):
-        files = os.listdir(path)
+    def make_cache(self):
+        files = os.listdir(self.path)
         return OrderedDict.fromkeys(files)
 
     def in_cache(self, hex_dig):

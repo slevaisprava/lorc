@@ -40,7 +40,7 @@ class LRUFiles:
                 os.remove(os.path.join(self.path, file_name))
 
 
-LRUFiles.make_path(BASE_CACHE_DIR)
+LRUFiles.make_path('')
 
 
 if __name__ == "__main__":

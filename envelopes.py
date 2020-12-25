@@ -4,8 +4,10 @@ import hashlib
 import numpy as np
 
 import my_module
+import lru_files
 
-TAB_DIR = '/dev/shm'
+TAB_DIR = 'envs'
+
 
 class ParseEnvelope:
     lst = '(\\[.*?\\]\\s*(?:\\*\\s*\\d+)?)'
@@ -13,6 +15,8 @@ class ParseEnvelope:
         f'([+~]*?)\\s*{lst}\\s*,\\s*{lst}\\s*,\\s*{lst}'
     )
     re_white_space = re.compile('\\s+')
+
+    cache = lru_files.LRUFiles(TAB_DIR)
 
     def __init__(self, src, orc_num):
         self.orc_num = orc_num
@@ -45,8 +49,9 @@ class ParseEnvelope:
             self.ftgens.append(self.env_name + ' = ' + existing_name)
         else:
             self.table_records[hash_dig] = self.env_def
+            ftgen = 'ftgen 0, 0, 0, -23'
             self.ftgens.append(
-                f'{self.env_name} ftgen 0, 0, 0, -23, "{TAB_DIR}/{hash_dig}"'
+                f'{self.env_name} {ftgen}, "{self.cache.path}/{hash_dig}"'
             )
 
     def _make_hash_dig(self):
@@ -56,12 +61,15 @@ class ParseEnvelope:
 
 
 class MakeEnvelopes:
-    def __init__(self, table_records):
+    def __init__(self, table_records, cache):
+        self.cache = cache
         self.table_records = table_records
         self.make_env_functions_args()
 
     def make_env_functions_args(self):
         for key in self.table_records:
+            if self.cache.in_cache(key):
+                continue
             env_arg = [eval(val) for val in self.table_records[key][1:4]]
             env_arg[0] = np.array(env_arg[0], dtype=np.float)
             env_arg[1] = np.array(env_arg[1], dtype=np.int32)
@@ -75,7 +83,13 @@ class MakeEnvelopes:
                 res = my_module.cycle_env(*env_arg)
             else:
                 res = my_module.env(*env_arg)
-            np.savetxt(f'{TAB_DIR}/{key}', res, fmt='%g')
+
+            self.write_result(res, key)
+
+    def write_result(self, res, key):
+        np.savetxt(f'{self.cache.path}/{key}', res, fmt='%g')
+        self.cache.put(key)
+
 
 if __name__ == "__main__":
     SRC = '''
@@ -86,4 +100,4 @@ if __name__ == "__main__":
     '''
     t = ParseEnvelope(SRC, 1)
     t.replace_env_readers()
-    m = MakeEnvelopes(t.table_records)
+    m = MakeEnvelopes(t.table_records, t.cache)

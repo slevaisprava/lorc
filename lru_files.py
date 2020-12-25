@@ -2,7 +2,7 @@ import os
 from collections import OrderedDict
 
 BASE_CACHE_DIR = '/dev/shm/csound'
-CAPACITY = 10
+CAPACITY = 20
 
 
 class LRUFiles:
@@ -25,10 +25,7 @@ class LRUFiles:
     def in_cache(self, hex_dig):
         if hex_dig in self.cache:
             self.cache.move_to_end(hex_dig)
-            print('in cache')
             return True
-
-        print('not in cache')
         return False
 
     def put(self, hex_dig):
@@ -39,7 +36,6 @@ class LRUFiles:
     def clear_cache(self):
         cache_len = len(self.cache)
         if cache_len > CAPACITY:
-            print('clear')
             for _ in range(cache_len-CAPACITY):
                 file_name = self.cache.popitem(last=False)[0]
                 os.remove(os.path.join(self.path, file_name))

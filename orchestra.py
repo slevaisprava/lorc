@@ -34,7 +34,7 @@ class Orchestra:
         env_obj = envelopes.ParseEnvelope(self.src, self.orc_num)
         env_obj.replace_env_readers()
         self.src = env_obj.src
-        envelopes.MakeEnvelopes(env_obj.table_records)
+        envelopes.MakeEnvelopes(env_obj.table_records, env_obj.cache)
         self._orchestra = self._split_instrs(env_obj.ftgens, ';udo')
 
     @property

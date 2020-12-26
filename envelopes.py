@@ -20,46 +20,51 @@ class ParseEnvelope:
 
     def __init__(self, src, orc_num):
         self.orc_num = orc_num
-        self.src = src
-        self.env_def = None
-        self.env_name = None
+        self._src = src
         self.tab_num = 0
 
         self.table_records = dict()
-        self.ftgens = []
+        self._ftgens = []
 
-    def replace_env_readers(self):
-        self.src = self.re_table_data.sub(self._env_proc, self.src)
-        self.ftgens = '\n'.join(self.ftgens)
+    @property
+    def ftgens(self):
+        return '\n'.join(self._ftgens)
 
-    def _env_proc(self, obj: re.Match):
+    def call_replace_func(self):
+        self._src = self.re_table_data.sub(self._replace_func, self._src)
+        return self._src
+
+    def _replace_func(self, obj: re.Match):
         self.tab_num += 1
-        self.env_def = [self.re_white_space.sub('', s) for s in obj.groups()]
-        self.env_def[0] = ''.join(sorted(self.env_def[0]))
+        env_data = [self.re_white_space.sub('', s) for s in obj.groups()]
+        env_name = f'gi_env_{self.orc_num}_{self.tab_num}'
 
-        self.env_name = f'gi_env_{self.orc_num}_{self.tab_num}'
-        self._make_table_record()
-        return self.env_name
+        self._make_table_records(env_name, env_data)
+        self._calc_env()
 
-    def _make_table_record(self):
-        hash_dig = self._make_hash_dig()
-        self.env_def.append(self.env_name)
+        return env_name
+
+    def _make_table_records(self, env_name, env_data):
+        hash_dig = self._hex_dig(env_data)
+        env_data.append(env_name)
+
         if hash_dig in self.table_records:
             existing_name = self.table_records[hash_dig][4]
-            self.ftgens.append(self.env_name + ' = ' + existing_name)
+            self._ftgens.append(env_name + ' = ' + existing_name)
         else:
-            self.table_records[hash_dig] = self.env_def
-            ftgen = 'ftgen 0, 0, 0, -23'
-            self.ftgens.append(
-                f'{self.env_name} {ftgen}, "{self.cache.path}/{hash_dig}"'
+            self.table_records[hash_dig] = env_data
+            ftgen23 = 'ftgen 0, 0, 0, -23'
+            self._ftgens.append(
+                f'{env_name} {ftgen23}, "{self.cache.path}/{hash_dig}"'
             )
 
-    def _make_hash_dig(self):
-        hash_object = hashlib.sha1(str(self.env_def).encode())
+    @staticmethod
+    def _hex_dig(env_data):
+        hash_object = hashlib.sha1(str(env_data).encode())
         hex_dig = hash_object.hexdigest()
         return hex_dig[:20]
 
-    def make_env_functions_args(self):
+    def _calc_env(self):
         for key in self.table_records:
             if self.cache.in_cache(key):
                 continue
@@ -77,9 +82,9 @@ class ParseEnvelope:
             else:
                 res = my_module.env(*env_arg)
 
-            self.write_result(res, key)
+            self._write_result(res, key)
 
-    def write_result(self, res, key):
+    def _write_result(self, res, key):
         np.savetxt(f'{self.cache.path}/{key}', res, fmt='%g')
         self.cache.put(key)
 
@@ -87,10 +92,9 @@ class ParseEnvelope:
 if __name__ == "__main__":
     SRC = '''
         table([123,23], [11,17], [5], 12, 78)
-        table(~[123,23], [11,17], [-5], 12, 78)
+        table(+~[123,23], [11,17], [-5], 12, 78)
         table(~+[123,23], [11,17], [-5], 12, 78)
         table(~[123,23], [11,17], [-5], 12, 78)
     '''
     t = ParseEnvelope(SRC, 1)
-    t.replace_env_readers()
-    m = MakeEnvelopes(t.table_records, t.cache)
+    t.call_replace_func()

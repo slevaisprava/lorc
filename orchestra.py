@@ -26,15 +26,14 @@ class Orchestra:
     re_kp_field = re.compile('\\b(kp\\d+_v\\d+\\b)')
 
     def __init__(self, src, orc_num):
-        self.src = src
+        self._src = src
         self.orc_num = orc_num
 
         self._parse_comments()
 
-        env_obj = envelopes.ParseEnvelope(self.src, self.orc_num)
-        env_obj.replace_env_readers()
-        env_obj.make_env_functions_args()
-        self.src = env_obj.src
+        env_obj = envelopes.ParseEnvelope(self._src, self.orc_num)
+        self._src = env_obj.call_replace_func()
+
         self._orchestra = self._split_instrs(env_obj.ftgens, ';udo')
 
     @property
@@ -43,11 +42,11 @@ class Orchestra:
 
     def _parse_comments(self):
         for i in self.re_comments:
-            self.src = i.sub('', self.src)
+            self._src = i.sub('', self._src)
 
     def _split_instrs(self, envs, udo):
         orc = [envs, udo]
-        for instr in self.re_instrs.finditer(self.src):
+        for instr in self.re_instrs.finditer(self._src):
             ibody = instr.group('ibody')
             orc.append(instr.group('izero') or '\n')
             orc.append('instr\t' + instr.group('inum'))

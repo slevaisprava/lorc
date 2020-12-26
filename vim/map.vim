@@ -1,4 +1,4 @@
-function! Start_csound_term()
+function! Start_Csound_Term()
 	w!
 	rightbelow call term_start("./vim/csound.sh", {"vertical":0, "term_name":"csound_terminal"})
 	tnoremap <silent><buffer><Esc> <C-W>:bw!<cr>
@@ -8,5 +8,5 @@ function! Start_csound_term()
 endfunction
 
 
-map <buffer><silent><M-s> :call Start_csound_term()<cr>
+map <buffer><silent><M-s> :call Start_Csound_Term()<cr>
 map <silent><M-g> :silent exec "!tig --all" \| redraw!<cr>

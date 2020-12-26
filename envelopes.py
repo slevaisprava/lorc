@@ -59,13 +59,6 @@ class ParseEnvelope:
         hex_dig = hash_object.hexdigest()
         return hex_dig[:20]
 
-
-class MakeEnvelopes:
-    def __init__(self, table_records, cache):
-        self.cache = cache
-        self.table_records = table_records
-        self.make_env_functions_args()
-
     def make_env_functions_args(self):
         for key in self.table_records:
             if self.cache.in_cache(key):

@@ -3,3 +3,5 @@ __pycache__
 *.wav
 *.orc
 *.so
+csound/*.orc
+*.pyc

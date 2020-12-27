@@ -20,8 +20,8 @@ def reload_modules():
     importlib.reload(envelopes)
     importlib.reload(orchestra)
     gc.collect()
-
+    print('Done')
 
 def pr(txt):
-    print(txt, os.getcwd())
-    vim.command('call Start_Csound_Term()')
+    vim.command('call Term_Start()')
+

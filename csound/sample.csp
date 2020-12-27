@@ -15,6 +15,10 @@ opcode Tab, k, ik
 	itab, ktm xin
 	xout table(ktm*ftlen(itab), itab)
 endop
+opcode Tabi, a, ia 
+	itab, atm xin
+	xout tablei:a(atm*(ftlen(itab)-1), itab)
+endop
 
 opcode Tabi, k, ik 
 	itab, ktm xin
@@ -25,8 +29,16 @@ endop
 	gitab = ftgen(0,0, 8192, -5, 1456, 8192/2, 11869, 8192/2, 1456)
 
 	;event_i "i", 11, 0.1, 11, 2
-	event_i "i", 11, 0, 19
-	event_i "e", 0, 20.5
+	event_i "i", 11, 0,  1
+	event_i "i", 300, 0, 1
+	event_i "i", 11, 4,  7
+	event_i "i", 300, 4, 7
+
+	event_i "i", 11, 15,  3
+	event_i "i", 300, 15, 3
+
+
+	event_i "e", 0,      19.5
 
 instr	11
 	v1:{
@@ -35,7 +47,7 @@ instr	11
 		kp1 init 112
 		kp2 = .6 
 		~kp3 = random:k(.1, 3)
-		~kp4 = Pquant(random:k(500, 1600)*.8,100,.9)
+		~kp4 = Pquant(random:k(200, 11600)*.8,100,.19)
 		kp5 = random:k(0, .1)
 		~kp6 = random:k(0, 1)
 		;kp7 = table([1,2], [1,6], [5], 2, 7)
@@ -47,9 +59,9 @@ instr	11
 		kcnt init 314
 		kstrum init 0.01
 		kp2 = .18;random:k(.1, .3)
-		~kp3=Tabi:k([.01, .6]*6,[130], [12,2], ktime)/1 ;Pquant(table:k(ktime, gITAB, 1)/4, 100, 1)
-		~kp4=Tabi:k(~[475, 900,375]*31,[30, 130], [15,-2,1], ktime)/2 ;Pquant(table:k(KTIME, Gitab, 1)/4, 100, 1)
-		kp5=Tab:k(~[.1, 2]*34,[160], [6], ktime)/3 ;Pquant(table:k(ktime, gITAB, 1)/4, 100, 1)
+		~kp3=Tabi:k([.01, .6]*6,[130], [12,2], ktime) ;Pquant(table:k(ktime, gITAB, 1)/4, 100, 1)
+		~kp4=Tabi:k(~[475, 900,375]*131,[30, 130], [15,-2,1], ktime)/4 ;Pquant(table:k(KTIME, Gitab, 1)/4, 100, 1)
+		kp5=Tab:k(~[.0, 2]*34,[160], [3], ktime)/43 ;pQUANT(TABLE:K(KTIME, Gitab, 1)/4, 100, 1)
 		;kp5 = random:k(0, 1)
 		~kp6 = random:k(0, 1)
 		~kp7 = Tab:k([0, 10], [110], [1], ktime)
@@ -61,8 +73,8 @@ instr	11
 		kstrum init 0.01
 		kp2 = 1;random:k(.1, .3)
 		~kp3=Tabi:k([.01, .6]*6,[130], [12,2], ktime)/3 ;Pquant(table:k(ktime, gITAB, 1)/4, 100, 1)
-		~kp4=Tabi:k(~[475, 900,375]*1,[30, 130], [15,-2,1], ktime)*2 ;Pquant(table:k(KTIME, Gitab, 1)/4, 100, 1)
-		kp5=Tab:k(~[.1, 2]*34,[160], [6], ktime) ;Pquant(table:k(ktime, gITAB, 1)/4, 100, 1)
+		~kp4=Tabi:k(~[475, 900,375]*1,[30, 130], [15,-2,1], ktime) ;Pquant(table:k(KTIME, Gitab, 1)/4, 100, 1)
+		kp5=Tab:k(~[.1, 2]*34,[160], [6], ktime)/80 ;Pquant(table:k(ktime, gITAB, 1)/4, 100, 1)
 		;kp5 = random:k(0, 1)
 		~kp6 = random:k(0, 1)
 		~kp7 = Tab:k([0, 10], [110], [1], ktime)
@@ -70,15 +82,24 @@ instr	11
 	}
 endin
 
-gis 	ftgen 0, 0, 8192*8, 10, 1,1
+gis 	ftgen 0, 0, 8192*16, 10, 1;, .4,.3,.2
+ga1, ga2 init 0
 instr	112
-	ae	linseg .000, p3/2, 1, p3-p3/2, 0.000
-	am	poscil3 ae*p8/.1, p4/3, gis
+	p4=p4/2
+	ae	expseg .001, p3/120, 1, p3-p3/120, 0.001
+	am	poscil3 ae*p8, p4/3, gis
 	a1	poscil3 ae*p5*.1, am+p4, gis
 	a2	poscil3 ae*p5*.1, am+p4*.94, gis
 		out a1*p6, a2*(1-p6)
+		ga1+=a1*p6
+		ga2+=a2*(1-p6)
 endin		
 
 instr 300
-
+	atime  line .34, p3, .38
+	am=Tabi:a(~[0,  42,10,4,0,4]*194,[160], [16]*200, atime) ;Pquant(table:k(ktime, gITAB, 1)/4, 100, 1)
+	am1=Tabi:a(~[0, 42,10,4,0,4]*195,[160], [16]*200, atime) ;Pquant(table:k(ktime, gITAB, 1)/4, 100, 1)
+	out  ga1*am1, ga2*am
+	ga1=0
+	ga2=0
 endin

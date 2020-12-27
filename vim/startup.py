@@ -1,12 +1,16 @@
 import importlib
 import gc
+import os
 
-from lorc_csp.gens import my_module
-from lorc_csp.vim import startup
-from lorc_csp import lru_files
-from lorc_csp import envelopes
-from lorc_csp import templates
-from lorc_csp import orchestra
+import vim
+
+from lorc import my_module
+from lorc.vim import startup
+from lorc import lru_files
+from lorc import envelopes
+from lorc import templates
+from lorc import orchestra
+
 
 def reload_modules():
     importlib.reload(startup)
@@ -16,3 +20,8 @@ def reload_modules():
     importlib.reload(envelopes)
     importlib.reload(orchestra)
     gc.collect()
+
+
+def pr(txt):
+    print(txt, os.getcwd())
+    vim.command('call Start_Csound_Term()')

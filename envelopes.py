@@ -3,8 +3,8 @@ import hashlib
 
 import numpy as np
 
-import my_module
-import lru_files
+from lorc import my_module
+from lorc import lru_files
 
 TAB_DIR = 'envs'
 

@@ -1,7 +1,7 @@
 import re
 
-import templates
-import envelopes
+from lorc import templates
+from lorc import envelopes
 
 
 class Orchestra:

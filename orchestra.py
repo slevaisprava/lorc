@@ -28,8 +28,11 @@ class Orchestra:
     def __init__(self, src, orc_num):
         self.orc_num = orc_num
         self._src = self._parse_comments(src)
-        ftgens = self._parse_envs()
-        self._orchestra = self._split_instrs(ftgens, ';udo')
+
+        self._ftgens = self._parse_envs()
+        self._udo = self._parse_udo()
+
+        self._orchestra = self._split_instrs()
 
     @property
     def orchestra(self):
@@ -45,8 +48,11 @@ class Orchestra:
         self._src = env_obj.call_replace_func()
         return env_obj.ftgens
 
-    def _split_instrs(self, envs, udo):
-        orc = [envs, udo]
+    def _parse_udo(self):
+        return '\n;Empty UDO\n'
+
+    def _split_instrs(self):
+        orc = [self._ftgens, self._udo]
         for instr in self.re_instrs.finditer(self._src):
             ibody = instr.group('ibody')
             orc.append(instr.group('izero') or '\n')

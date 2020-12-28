@@ -22,5 +22,10 @@ def reload_modules():
     gc.collect()
     print('Done')
 
+
 def pr(txt):
+    src = '\n'.join(vim.current.buffer[:])
+    orch = orchestra.Orchestra(src, 1)
+    with open('/dev/shm/sample.orc', 'w') as f:
+        f.writelines(orch.orchestra)
     vim.command('call Term_Start()')

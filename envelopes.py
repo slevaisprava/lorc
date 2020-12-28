@@ -3,7 +3,7 @@ import hashlib
 
 import numpy as np
 
-from lorc import my_module
+from lorc.gens import my_module
 from lorc import lru_files
 
 TAB_DIR = 'envs'

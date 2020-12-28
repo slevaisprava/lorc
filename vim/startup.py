@@ -4,7 +4,7 @@ import os
 
 import vim
 
-from lorc import my_module
+from lorc.gens import my_module
 from lorc.vim import startup
 from lorc import lru_files
 from lorc import envelopes
@@ -24,4 +24,3 @@ def reload_modules():
 
 def pr(txt):
     vim.command('call Term_Start()')
-

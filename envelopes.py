@@ -30,7 +30,8 @@ class ParseEnvelope:
     def ftgens(self):
         return '\n'.join(self._ftgens)
 
-    def call_replace_func(self):
+    @property
+    def src(self):
         self._src = self.re_table_data.sub(self._replace_func, self._src)
         return self._src
 
@@ -97,4 +98,4 @@ if __name__ == "__main__":
         table(~[123,23], [11,17], [-5], 12, 78)
     '''
     t = ParseEnvelope(SRC, 1)
-    t.call_replace_func()
+    _ = t.src

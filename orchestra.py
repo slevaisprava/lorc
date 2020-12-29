@@ -45,7 +45,7 @@ class Orchestra:
 
     def _parse_envs(self):
         env_obj = envelopes.ParseEnvelope(self._src, self.orc_num)
-        self._src = env_obj.call_replace_func()
+        self._src = env_obj.src
         return env_obj.ftgens
 
     def _parse_udo(self):

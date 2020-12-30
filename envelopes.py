@@ -73,6 +73,7 @@ class ParseEnvelope:
         for key in self.table_records:
             if self.cache.in_cache(key):
                 continue
+
             env_arg = [eval(val) for val in self.table_records[key][1:4]]
             env_arg[0] = np.array(env_arg[0], dtype=np.float)
             env_arg[1] = np.array(env_arg[1], dtype=np.int32)

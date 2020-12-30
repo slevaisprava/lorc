@@ -17,6 +17,7 @@ def make_path(path):
         os.makedirs(path)
     return path
 
+
 def load_vim_scripts():
     path = os.path.realpath(__file__)
     path = os.path.dirname(path)
@@ -51,6 +52,7 @@ def start_single_orc():
     cmd = vim.current.buffer[0].lstrip(';').split()
     cmd.append(tmp_name)
     vim.command(f'call Term_Start({cmd})')
+
 
 def on_csound_close():
     envelopes.ParseEnvelope.cache._clear_cache()

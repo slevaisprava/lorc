@@ -4,6 +4,7 @@ import os
 
 import vim
 
+
 from lorc.gens import my_module
 from lorc.vim import startup
 from lorc import lru_files
@@ -29,3 +30,5 @@ def pr(txt):
     with open('/dev/shm/sample.orc', 'w') as f:
         f.writelines(orch.orchestra)
     vim.command('call Term_Start()')
+def pr1():
+    envelopes.ParseEnvelope.cache._clear_cache()

@@ -34,7 +34,6 @@ class LRUFiles:
     def put(self, hex_dig):
         self._cache[hex_dig] = None
         self._cache.move_to_end(hex_dig)
-        self._clear_cache()
 
     def _clear_cache(self):
         cache_len = len(self._cache)

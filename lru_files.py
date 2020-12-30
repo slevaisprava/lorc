@@ -43,9 +43,6 @@ class LRUFiles:
                 os.remove(os.path.join(self._path, file_name))
 
 
-LRUFiles.make_path('')
-
-
 if __name__ == "__main__":
     lru1 = LRUFiles('envs')
     print(lru1._cache)

@@ -1,5 +1,5 @@
 function! Term_Exit(job, ec)
-	py3 startup.pr1()
+	py3 startup.on_csound_close()
 endfunction	
 
 function! Term_Start(cmd)
@@ -8,5 +8,5 @@ function! Term_Start(cmd)
 	map  <silent><buffer> <M-j> :bw!<cr>
 endfunction
 
-nmap <silent> <M-j> :py3 startup.start_single_orc(vim.eval('bufname("%")'))<cr>
+nmap <silent> <M-j> :py3 startup.start_single_orc()<cr>
 nmap <silent> <M-r> :py3 startup.reload_modules()<cr>

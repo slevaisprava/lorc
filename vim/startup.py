@@ -4,7 +4,7 @@ import os
 
 import vim
 
-from lorc.vim  import tmp_dirs
+from lorc.vim  import tmp_dirs, startup
 from lorc import lru_files, envelopes, templates, orchestra
 from lorc.gens import my_module
 
@@ -20,7 +20,6 @@ def load_vim_scripts():
 
 
 def reload_modules():
-    from lorc.vim  import  tmp_dirs, startup
     importlib.reload(tmp_dirs)
     importlib.reload(startup)
     importlib.reload(my_module)

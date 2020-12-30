@@ -24,11 +24,21 @@ def reload_modules():
     print('Done')
 
 
-def pr(txt):
+path = os.path.realpath(__file__)
+path = os.path.dirname(path)
+vim_conf_file = os.path.join(path, 'startup.vim')
+
+with open(vim_conf_file, 'r') as f:
+    vim_script = f.read()
+    vim.command(vim_script)
+
+
+def pr():
     src = '\n'.join(vim.current.buffer[:])
     orch = orchestra.Orchestra(src, 1)
     with open('/dev/shm/sample.orc', 'w') as f:
         f.writelines(orch.orchestra)
     vim.command('call Term_Start()')
+
 def pr1():
     envelopes.ParseEnvelope.cache._clear_cache()

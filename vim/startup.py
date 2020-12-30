@@ -4,18 +4,9 @@ import os
 
 import vim
 
+from lorc.vim  import tmp_dirs
 from lorc import lru_files, envelopes, templates, orchestra
 from lorc.gens import my_module
-
-
-BASE_DIR = '/dev/shm/csound'
-
-
-def make_path(path):
-    path = os.path.join(BASE_DIR, path)
-    if not os.path.exists(path):
-        os.makedirs(path)
-    return path
 
 
 def load_vim_scripts():
@@ -29,7 +20,8 @@ def load_vim_scripts():
 
 
 def reload_modules():
-    from lorc.vim  import startup
+    from lorc.vim  import  tmp_dirs, startup
+    importlib.reload(tmp_dirs)
     importlib.reload(startup)
     importlib.reload(my_module)
     importlib.reload(templates)
@@ -44,7 +36,7 @@ def start_single_orc():
     src = '\n'.join(vim.current.buffer[:])
     orc = orchestra.Orchestra(src, 1)
     tmp_name = os.path.join(
-        ORC_TMP_DIR, 
+        tmp_dirs.ORC_TMP_PATH, 
         os.path.basename(vim.current.buffer.name) + '.orc'
     )
     with open(tmp_name, 'w') as f:
@@ -59,5 +51,3 @@ def on_csound_close():
 
 
 load_vim_scripts()
-ORC_TMP_DIR = make_path('')
-ORC_TMP_DIR = make_path('orcs')

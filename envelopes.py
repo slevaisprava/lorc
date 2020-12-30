@@ -6,8 +6,6 @@ import numpy as np
 from lorc.gens import my_module
 from lorc import lru_files
 
-TAB_DIR = 'envs'
-
 
 class ParseEnvelope:
     lst = '(\\[.*?\\]\\s*(?:\\*\\s*\\d+)?)'
@@ -16,7 +14,7 @@ class ParseEnvelope:
     )
     re_white_space = re.compile('\\s+')
 
-    cache = lru_files.LRUFiles(TAB_DIR)
+    cache = lru_files.LRUFiles()
 
     def __init__(self, src, orc_num):
         self.orc_num = orc_num

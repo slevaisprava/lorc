@@ -18,8 +18,7 @@ class ParseEnvelope:
 
     def __init__(self, src, orc_num):
         self.orc_num = orc_num
-        if self.orc_num == 1:
-            self.tab_num = 0
+        self.tab_num = 0
         
         self._src = src
         self.table_records = dict()

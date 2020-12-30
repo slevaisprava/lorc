@@ -45,12 +45,10 @@ class ParseEnvelope:
         env_data = [self.re_white_space.sub('', s) for s in re_obj.groups()]
         hex_dig = self._hex_dig(env_data)
         env_data.append(env_name)
-        env_data.append(hex_dig)
-        self._make_table_records(env_data)
+        self._make_table_records(env_data, hex_dig)
 
-    def _make_table_records(self, env_data):
+    def _make_table_records(self, env_data, hex_dig):
         env_name = env_data[4]
-        hex_dig = env_data[5]
         if hex_dig in self.table_records:
             existing_name = self.table_records[hex_dig][4]
             self._ftgens.append(env_name + ' = ' + existing_name)

@@ -1,5 +1,6 @@
 function! Term_Exit(job, ec)
 	py3 startup.on_csound_close()
+	echo
 endfunction	
 
 function! Term_Start(cmd)
@@ -8,5 +9,5 @@ function! Term_Start(cmd)
 	map  <silent><buffer> <M-x> :bw!<cr>
 endfunction
 
-nmap <silent> <M-x> :py3 startup.start_single_orc()<cr>
+nmap <silent> <M-x> :echo 'WIP...'\|silent py3 startup.start_single_orc()<cr>
 nmap <silent> <M-r> :py3 startup.reload_modules()<cr>

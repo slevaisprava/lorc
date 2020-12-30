@@ -4,13 +4,9 @@ import os
 
 import vim
 
-
+from lorc import lru_files, envelopes, templates, orchestra
 from lorc.gens import my_module
-from lorc.vim import startup
-from lorc import lru_files
-from lorc import envelopes
-from lorc import templates
-from lorc import orchestra
+from lorc.vim  import startup
 
 
 def reload_modules():

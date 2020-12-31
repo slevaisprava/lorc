@@ -32,17 +32,35 @@ def reload_modules():
 
 
 def start_single_orc():
-    src = '\n'.join(vim.current.buffer[:])
-    orc = orchestra.Orchestra(src, 1)
-    tmp_name = os.path.join(
-        tmp_dirs.ORC_TMP_PATH, 
-        os.path.basename(vim.current.buffer.name) + '.orc'
-    )
-    with open(tmp_name, 'w') as f:
-        f.writelines(orc.orchestra)
-    cmd = vim.current.buffer[0].lstrip(';').split()
-    cmd.append(tmp_name)
+    buf = vim.current.buffer
+
+    orc = make_orc(buf)
+    orc_name = save_orc(buf, orc)
+    cmd = make_cmd(buf, orc_name)
+
     vim.command(f'call Term_Start({cmd})')
+
+
+def make_orc(buf):
+    src = '\n'.join(buf[:])
+    orc = orchestra.Orchestra(src, 1)
+    return orc
+
+
+def save_orc(buf, orc):
+    orc_name = os.path.join(
+        tmp_dirs.ORC_TMP_PATH, 
+        os.path.basename(buf.name) + '.orc'
+    )
+    with open(orc_name, 'w') as f:
+        f.writelines(orc.orchestra)
+    return orc_name
+
+
+def make_cmd(buf, orc_name):
+    cmd = buf[0].lstrip(';').split()
+    cmd.append(orc_name)
+    return cmd
 
 
 def on_csound_close():

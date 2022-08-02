@@ -1,10 +1,10 @@
-import re
 import hashlib
+import re
 
 import numpy as np
 
-from lorc.gens import my_module
-from lorc import lru_files
+import lru_files
+from lorc.gens import gen_functions
 
 
 class ParseEnvelope:
@@ -70,18 +70,18 @@ class ParseEnvelope:
                 continue
 
             env_arg = [eval(val) for val in self.table_records[key][1:4]]
-            env_arg[0] = np.array(env_arg[0], dtype=np.float)
+            env_arg[0] = np.array(env_arg[0], dtype=float)
             env_arg[1] = np.array(env_arg[1], dtype=np.int32)
-            env_arg[2] = np.array(env_arg[2], dtype=np.float)
+            env_arg[2] = np.array(env_arg[2], dtype=float)
 
             if '+' in self.table_records[key][0]:
                 env_arg.append(1)
             else:
                 env_arg.append(0)
             if '~' in self.table_records[key][0]:
-                res = my_module.cycle_env(*env_arg)
+                res = gen_functions.cycle_env(*env_arg)
             else:
-                res = my_module.env(*env_arg)
+                res = gen_functions.env(*env_arg)
 
             self._write_result(res, key)
 
@@ -98,4 +98,5 @@ if __name__ == "__main__":
         table(~[123,23], [11,17], [-5], 12, 78)
     '''
     tt = ParseEnvelope(SRC, 1)
-    _ = tt.src
+    # _ = tt.src
+    print(tt.src)

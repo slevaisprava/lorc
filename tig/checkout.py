@@ -1,6 +1,6 @@
 import os
-import sys
 import subprocess
+import sys
 
 CMD = "git --no-pager log --oneline --decorate=full -1 --pretty='%D' --no-color"
 

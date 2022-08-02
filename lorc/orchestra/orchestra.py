@@ -1,25 +1,22 @@
 import re
 
-from lorc import templates
-from lorc import envelopes
+import templates
+from lorc.orchestra import envelopes
 
 
 class Orchestra:
-
-    re_comments = (
+    RE_COMMENTS = (
         re.compile('(;.*)|(//.*)'),
         re.compile('/\\*.*\\*/', re.DOTALL)
     )
-    re_instrs = re.compile(
-        '^(?P<izero>.*?)?^\\s*?instr\\s+(?P<inum>\\w+)(?P<ibody>.+?)^\\s*?endin',
-        re.DOTALL + re.MULTILINE
+    RE_INSTRS = re.compile(
+        '^(?P<izero>.*?)?^\\s*?instr\\s+(?P<inum>\\w+)(?P<ibody>.+?)^\\s*?endin', re.DOTALL + re.MULTILINE
     )
-    re_voices = re.compile(
-        '^(?P<vzero>.*?)?^\\s*?(?P<vtype>[vme])(?P<vnum>\\d+):{(?P<vbody>.+?)}',
-        re.DOTALL + re.MULTILINE
+    RE_VOICES = re.compile(
+        '^(?P<vzero>.*?)?^\\s*?(?P<vtype>[vme])(?P<vnum>\\d+):{(?P<vbody>.+?)}', re.DOTALL + re.MULTILINE
     )
-    re_is_event_instr = re.compile('[vme]\\d+:{')
-    re_tilda_search = re.compile('^\\s*?~.+?$', re.DOTALL + re.MULTILINE)
+    RE_INSTR_HAS_VOICE = re.compile('[vme]\\d+:{')
+    RE_VARIABLES_WITH_TILDA = re.compile('^\\s*?~.+?$', re.DOTALL + re.MULTILINE)
     re_tilda_replace = re.compile('~', re.DOTALL + re.MULTILINE)
     re_no_tilda = re.compile('^\\s*?[^~]\\w.+?$', re.DOTALL + re.MULTILINE)
     re_kvar = re.compile('([^:_]\\bk[a-zA-Z0-9]*\\b)')
@@ -39,7 +36,7 @@ class Orchestra:
         return self._orchestra
 
     def _parse_comments(self, src):
-        for i in self.re_comments:
+        for i in self.RE_COMMENTS:
             src = i.sub('', src)
         return src
 
@@ -48,24 +45,25 @@ class Orchestra:
         self._src = env_obj.src
         return env_obj.ftgens
 
-    def _parse_udo(self):
+    @staticmethod
+    def _parse_udo():
         return '\n;Empty UDO\n'
 
     def _split_instrs(self):
         orc = [self._ftgens, self._udo]
-        for instr in self.re_instrs.finditer(self._src):
+        for instr in self.RE_INSTRS.finditer(self._src):
             ibody = instr.group('ibody')
             orc.append(instr.group('izero') or '\n')
             orc.append('instr\t' + instr.group('inum'))
 
-            # Normal instruments
-            if not self.re_is_event_instr.search(ibody):
+            # Normal instruments Ничего не делаем
+            if not self.RE_INSTR_HAS_VOICE.search(ibody):
                 orc.append(ibody)
                 orc.append('endin\n')
                 continue
 
             # Event instruments
-            for voice in self.re_voices.finditer(ibody):
+            for voice in self.RE_VOICES.finditer(ibody):
                 orc.append(voice.group('vzero') or '')
                 code = self._parse_vars(
                     voice.group('vbody'),
@@ -83,7 +81,7 @@ class Orchestra:
         if len(pfields) < 3:
             return ''
 
-        tilda = '\n'.join(self.re_tilda_search.findall(code))
+        tilda = '\n'.join(self.RE_VARIABLES_WITH_TILDA.findall(code))
         tilda = self.re_tilda_replace.sub('\\t', tilda)
         no_tilda = '\n'.join(self.re_no_tilda.findall(code))
         template = getattr(templates, vtype)
@@ -98,8 +96,8 @@ class Orchestra:
 
 
 if __name__ == "__main__":
-    with open('csound/sample.csp', 'r') as f:
+    with open('../csound/sample.csp', 'r') as f:
         source = f.read()
     orch = Orchestra(source, 1)
-    with open('csound/sample.orc', 'w') as f:
+    with open('../csound/sample.orc', 'w') as f:
         f.writelines(orch.orchestra)

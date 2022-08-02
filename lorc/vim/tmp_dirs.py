@@ -1,6 +1,6 @@
 import os
 
-BASE_DIR = '/dev/shm/csound'
+BASE_DIR = '/Users/es/ttmp'
 
 def make_path(path):
     path = os.path.join(BASE_DIR, path)

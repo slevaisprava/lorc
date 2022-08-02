@@ -4,7 +4,7 @@ from numba import njit
 from numba.typed import List
 
 
-cc = CC('my_module')
+cc = CC('gen_functions')
 
 
 @cc.export('env', 'f8[:](f8[:], i4[:], f8[:], i4)')

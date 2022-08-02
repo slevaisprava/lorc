@@ -3,7 +3,7 @@ import re
 
 import numpy as np
 
-import lru_files
+from lorc.orchestra import lru_files
 from lorc.gens import gen_functions
 
 

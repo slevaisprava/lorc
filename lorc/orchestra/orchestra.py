@@ -1,7 +1,7 @@
 import re
 
-import templates
 from lorc.orchestra import envelopes
+from lorc.orchestra import templates
 
 
 class Orchestra:
@@ -93,11 +93,3 @@ class Orchestra:
             ', '.join(pfields[2:])
         )
         return code
-
-
-if __name__ == "__main__":
-    with open('../csound/sample.csp', 'r') as f:
-        source = f.read()
-    orch = Orchestra(source, 1)
-    with open('../csound/sample.orc', 'w') as f:
-        f.writelines(orch.orchestra)

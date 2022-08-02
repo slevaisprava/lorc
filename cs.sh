@@ -1,3 +1,4 @@
-cd ~/projects/lorc
+cd ~/projects/lorc || exit
 source venv/bin/activate
-python orchestra.py && exec ~/projects/csound/build/csound -odac -+rtaudio=auhal --orc csound/sample.orc
+
+python  main.py && csound -odac -+rtaudio=auhal --orc lorc/csound/sample.orc

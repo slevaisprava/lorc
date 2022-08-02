@@ -8,7 +8,7 @@ cc = CC('gen_functions')
 
 
 @cc.export('env', 'f8[:](f8[:], i4[:], f8[:], i4)')
-def env(values, times, curves, cumsum):
+def env(values, times, curves):
     times = _justify_arrays(values, times)
     curves = _justify_arrays(values, curves)
 
@@ -34,7 +34,7 @@ def env(values, times, curves, cumsum):
 
 
 @cc.export('cycle_env', 'f8[:](f8[:], i4[:], f8[:], i4)')
-def cycle_env(values, times, curves, cumsum):
+def cycle_env(values, times, curves):
     times = _justify_arrays(values, times)
     curves = _justify_arrays(values, curves)
     table = List()
@@ -53,7 +53,7 @@ def make_curves2(val, mn, mx, curve):
     if mn != mx:
         grow = np.exp(curve)
         a = (mx - mn)/(1.0 - grow)
-        b = mn + a;
+        b = mn + a
         val = b - (a * np.power(grow, (val - mn)/(mx - mn)))
     return val
 
@@ -77,7 +77,7 @@ def make_curves(arr, curve):
     if mn != mx:
         grow = np.exp(curve)
         a = (mx - mn)/(1.0 - grow)
-        b = mn + a;
+        b = mn + a
         arr = b - (a * np.power(grow, (arr - mn)/(mx - mn)))
     return arr
 

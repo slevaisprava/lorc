@@ -6,4 +6,4 @@ if __name__ == "__main__":
         source = f.read()
     orc = orchestra.Orchestra(source, 1)
     with open('lorc/csound/sample.orc', 'w') as f:
-        f.writelines(orc.orchestra)
+        f.writelines(orc.parse_instruments())

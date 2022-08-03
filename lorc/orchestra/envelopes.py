@@ -68,12 +68,10 @@ class ParseEnvelope:
         for key in self.table_records:
             if self.cache.in_cache(key):
                 continue
-
             env_arg = [eval(val) for val in self.table_records[key][1:4]]
             env_arg[0] = np.array(env_arg[0], dtype=float)
             env_arg[1] = np.array(env_arg[1], dtype=np.int32)
             env_arg[2] = np.array(env_arg[2], dtype=float)
-
             if '+' in self.table_records[key][0]:
                 env_arg.append(1)
             else:
@@ -98,5 +96,4 @@ if __name__ == "__main__":
         table(~[123,23], [11,17], [-5], 12, 78)
     '''
     tt = ParseEnvelope(SRC, 1)
-    # _ = tt.src
     print(tt.src)

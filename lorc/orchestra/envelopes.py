@@ -6,14 +6,14 @@ import numpy as np
 from lorc.orchestra import lru_files
 from lorc.gens import gen_functions
 
+LST = '(\\[.*?\\]\\s*(?:\\*\\s*\\d+)?)'
+RE_TABLE_DATA = re.compile(
+    f'([+~]*?)\\s*{LST}\\s*,\\s*{LST}\\s*,\\s*{LST}'
+)
+RE_WHITE_SPACE = re.compile('\\s+')
+
 
 class ParseEnvelope:
-    lst = '(\\[.*?\\]\\s*(?:\\*\\s*\\d+)?)'
-    re_table_data = re.compile(
-        f'([+~]*?)\\s*{lst}\\s*,\\s*{lst}\\s*,\\s*{lst}'
-    )
-    re_white_space = re.compile('\\s+')
-
     cache = lru_files.LRUFiles()
 
     def __init__(self, src, orc_num):
@@ -30,7 +30,7 @@ class ParseEnvelope:
 
     @property
     def src(self):
-        self._src = self.re_table_data.sub(self._replace_func, self._src)
+        self._src = RE_TABLE_DATA.sub(self._replace_func, self._src)
         self._calc_env()
         return self._src
 
@@ -41,7 +41,7 @@ class ParseEnvelope:
         return env_name
 
     def _make_env_data(self, re_obj, env_name):
-        env_data = [self.re_white_space.sub('', s) for s in re_obj.groups()]
+        env_data = [RE_WHITE_SPACE.sub('', s) for s in re_obj.groups()]
         hex_dig = self._hex_dig(env_data)
         env_data.append(env_name)
         self._make_table_records(env_data, hex_dig)
@@ -68,12 +68,10 @@ class ParseEnvelope:
         for key in self.table_records:
             if self.cache.in_cache(key):
                 continue
-
             env_arg = [eval(val) for val in self.table_records[key][1:4]]
             env_arg[0] = np.array(env_arg[0], dtype=float)
             env_arg[1] = np.array(env_arg[1], dtype=np.int32)
             env_arg[2] = np.array(env_arg[2], dtype=float)
-
             if '+' in self.table_records[key][0]:
                 env_arg.append(1)
             else:
@@ -98,5 +96,4 @@ if __name__ == "__main__":
         table(~[123,23], [11,17], [-5], 12, 78)
     '''
     tt = ParseEnvelope(SRC, 1)
-    # _ = tt.src
     print(tt.src)

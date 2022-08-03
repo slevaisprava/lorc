@@ -3,7 +3,8 @@ import gc
 import os
 
 from lorc.vim import tmp_dirs
-from lorc import lru_files, envelopes, templates, orchestra, vim
+from lorc.orchestra import lru_files, envelopes, templates, orchestra
+import vim
 from lorc.gens import my_module
 
 

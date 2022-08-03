@@ -1,8 +1,7 @@
 import numpy as np
-from numba.pycc import CC
 from numba import njit
+from numba.pycc import CC
 from numba.typed import List
-
 
 cc = CC('gen_functions')
 
@@ -14,7 +13,6 @@ def env(values, times, curves):
 
     res_size = np.sum(times) - (times.size-1)
     res = np.empty(res_size)
-
     i = 0
     k = 0
     for time in times:

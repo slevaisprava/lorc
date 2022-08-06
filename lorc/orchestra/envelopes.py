@@ -53,9 +53,8 @@ class ParseEnvelope:
             self._ftgens.append(env_name + ' = ' + existing_name)
         else:
             self.table_records[hex_dig] = env_data
-            ftgen23 = 'ftgen 0, 0, 0, -23'
             self._ftgens.append(
-                f'{env_name} {ftgen23}, "{self.cache.path}/{hex_dig}"'
+                f'{env_name} ftgen 0, 0, 0, -23, "{self.cache.path}/{hex_dig}"'
             )
 
     @staticmethod
@@ -72,28 +71,11 @@ class ParseEnvelope:
             env_arg[0] = np.array(env_arg[0], dtype=float)
             env_arg[1] = np.array(env_arg[1], dtype=np.int32)
             env_arg[2] = np.array(env_arg[2], dtype=float)
-            if '+' in self.table_records[key][0]:
-                env_arg.append(1)
-            else:
-                env_arg.append(0)
-            if '~' in self.table_records[key][0]:
-                res = gen_functions.cycle_env(*env_arg)
-            else:
-                res = gen_functions.env(*env_arg)
-
-            self._write_result(res, key)
+            self._write_result(
+                gen_functions.env(*env_arg),
+                key
+            )
 
     def _write_result(self, res, key):
         np.savetxt(f'{self.cache.path}/{key}', res, fmt='%g')
         self.cache.put(key)
-
-
-if __name__ == "__main__":
-    SRC = '''
-        table([123,23], [11,17], [5], 12, 78)
-        table(+~[123,23], [11,17], [-5], 12, 78)
-        table(~+[123,23], [11,17], [-5], 12, 78)
-        table(~[123,23], [11,17], [-5], 12, 78)
-    '''
-    tt = ParseEnvelope(SRC, 1)
-    print(tt.src)

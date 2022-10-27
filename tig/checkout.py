@@ -21,7 +21,7 @@ def checkout(commit):
 
 
 def is_branch(commit):
-    output = subprocess.getoutput(CMD + ' ' + commit)
+    output = subprocess.getoutput(CMD + " " + commit)
     res = None
     if "HEAD -> " in output:
         output = output.split("HEAD -> ")[1]
@@ -34,5 +34,5 @@ def is_branch(commit):
     return res
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

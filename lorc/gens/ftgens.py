@@ -2,10 +2,10 @@ import numpy as np
 from numba import njit
 from numba.pycc import CC
 
-cc = CC('gen_functions')
+cc = CC("gen_functions")
 
 
-@cc.export('env', 'f8[:](f8[:], i4[:], f8[:])')
+@cc.export("env", "f8[:](f8[:], i4[:], f8[:])")
 def env(values, times, curves):
     times = _justify_arrays(values, times)
     curves = _justify_arrays(values, curves)

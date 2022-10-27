@@ -1,6 +1,6 @@
 import os
 
-BASE_DIR = '/Users/es/ttmp'
+BASE_DIR = "/Users/es/ttmp"
 
 
 def make_path(path):
@@ -10,6 +10,6 @@ def make_path(path):
     return path
 
 
-BASE_PATH = make_path('')
-ORC_TMP_PATH = make_path('orcs')
-LRU_TMP_PATH = make_path('envs')
+BASE_PATH = make_path("")
+ORC_TMP_PATH = make_path("orcs")
+LRU_TMP_PATH = make_path("envs")
